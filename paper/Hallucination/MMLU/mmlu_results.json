@@ -1,0 +1,7 @@
+{
+    "baseline": 0.4318245614035089,
+    "direct_questions": 0.43410526315789477,
+    "questioning_assuming_statement": 0.416421052631579,
+    "conversation": 0.4177192982456141,
+    "alluding_questions": 0.41568421052631577
+}
