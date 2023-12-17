@@ -33,9 +33,13 @@ def bold_text(text: str) -> str:
 def caesar_decrypt(text: str, shift: int) -> str:
     decrypted = "".join([chr((ord(char) - 32 - shift) % 95 + 32) for char in text])
     return decrypted
+import json
+keys_file_path = "/root/keys"
+with open(keys_file_path, 'r') as keys_file:
+    keys = json.load(keys_file)
 
 
-openai.api_key = caesar_decrypt("for_publishing_reasons_redacted", shift=3)
+openai.api_key = keys["OPENAI_API_KEY"]
 
 
 from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError

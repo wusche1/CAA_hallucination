@@ -4,7 +4,12 @@ from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 import re
 
-token = os.getenv("TOKEN_NAME")
+import json
+keys_file_path = "/root/keys"
+with open(keys_file_path, 'r') as keys_file:
+    keys = json.load(keys_file)
+
+token = keys["TOKEN_NAME"]
 
 
 class BlockOutputWrapper(torch.nn.Module):
