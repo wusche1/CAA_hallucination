@@ -11,7 +11,7 @@ import pandas as pd
 from tqdm import tqdm
 import torch
 
-token = "redacted_for_publishing"
+token = os.getenv("TOKEN_NAME")
 import os
 import re
 import json

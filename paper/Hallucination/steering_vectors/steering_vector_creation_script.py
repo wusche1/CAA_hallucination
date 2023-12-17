@@ -10,7 +10,7 @@ import pandas as pd
 from tqdm import tqdm
 import torch
 
-token = "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"
+token = os.getenv("TOKEN_NAME")
 import os
 import numpy as np
 import re

@@ -15,13 +15,13 @@ from datagen_functions import (
 from tqdm import tqdm
 import torch
 
-token = "redacted_for_publishing"
+token = os.getenv("TOKEN_NAME")
 import os
 import re
 import json
 import openai
 
-openai_api_key = caesar_decrypt("redacted_for_publishing", shift=3)
+openai_api_key = openai_api_key = os.getenv("OPENAI_API_KEY")
 data_path = "../Datasets/HOCUS/"
 HOCUS_seeds = json.load(open(data_path + "HOCUS_seed.json", "r"))
 
