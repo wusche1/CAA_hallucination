@@ -16,7 +16,12 @@ from matplotlib import pyplot as plt
 from math import log
 from matplotlib.ticker import ScalarFormatter
 
-token = "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"
+import json
+
+keys_file_path = "/root/keys"
+with open(keys_file_path, "r") as keys_file:
+    keys = json.load(keys_file)
+token = keys["TOKEN_NAME"]
 
 system_prompt = (
     "You are a helpful, honest and concise assistant."  # Needed for chat model
@@ -77,14 +82,12 @@ class BlockOutputWrapper(torch.nn.Module):
         if self.calc_dot_product_with is not None:
             last_token_activations = self.activations[0, -1, :]
 
-
             decoded_activations = self.unembed_matrix(self.norm(last_token_activations))
             top_token_id = torch.topk(decoded_activations, 1)[1][0]
             top_token = self.tokenizer.decode(top_token_id)
             dot_product = torch.dot(last_token_activations, self.calc_dot_product_with)
             self.dot_products.append((top_token, dot_product.cpu().item()))
         if self.add_activations is not None:
-
             augmented_output = add_vector_after_position(
                 matrix=output[0],
                 vector=self.add_activations,
@@ -127,19 +130,20 @@ class BlockOutputWrapper(torch.nn.Module):
         self.calc_dot_product_with = None
         self.dot_products = []
 
+
 def add_vector_after_position(
     matrix, vector, position_ids, after=None, do_projection=True
 ):
     # Check the devices of the tensors
     devices = {matrix.device, vector.device, position_ids.device}
-    
+
     # Remove 'cpu' from the set if there are other devices present
-    if len(devices) > 1 and torch.device('cpu') in devices:
-        devices.remove(torch.device('cpu'))
-    
+    if len(devices) > 1 and torch.device("cpu") in devices:
+        devices.remove(torch.device("cpu"))
+
     # Decide the common device
     common_device = next(iter(devices))
-    
+
     # Move tensors to the common device if they are not already there
     matrix = matrix.to(common_device)
     vector = vector.to(common_device)
@@ -157,11 +161,15 @@ def add_vector_after_position(
 
     matrix += mask.float() * vector
     return matrix
+
+
 def find_instruction_end_postion(tokens, end_str):
     start_pos = find_last_subtensor_position(tokens, end_str)
     if start_pos == -1:
         return -1
     return start_pos + len(end_str) - 1
+
+
 def find_last_subtensor_position(tensor, sub_tensor):
     n, m = tensor.size(0), sub_tensor.size(0)
     if m > n:
@@ -171,18 +179,24 @@ def find_last_subtensor_position(tensor, sub_tensor):
             return i
     return -1
 
+
 def get_free_memory_on_gpus():
     """
     Get the free memory for each GPU in MB.
     """
     try:
-        result = subprocess.run(['nvidia-smi', '--query-gpu=memory.free', '--format=csv,nounits,noheader'],
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        free_memory = [int(x) for x in result.stdout.decode().strip().split('\n')]
+        result = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,nounits,noheader"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+        )
+        free_memory = [int(x) for x in result.stdout.decode().strip().split("\n")]
         return free_memory
     except subprocess.CalledProcessError as e:
         print("Error querying nvidia-smi for GPU free memory:", e)
         return []
+
 
 def get_free_gpus(threshold=0.25):
     """
@@ -190,63 +204,90 @@ def get_free_gpus(threshold=0.25):
     """
     free_gpus = []
     free_memory = get_free_memory_on_gpus()
-    total_memory = [torch.cuda.get_device_properties(device_id).total_memory / 1e6 for device_id in range(torch.cuda.device_count())]  # Convert bytes to MB
+    total_memory = [
+        torch.cuda.get_device_properties(device_id).total_memory / 1e6
+        for device_id in range(torch.cuda.device_count())
+    ]  # Convert bytes to MB
 
     for device_id, (free, total) in enumerate(zip(free_memory, total_memory)):
         free_mem_ratio = free / total
-        
+
         if free_mem_ratio >= threshold:
             free_gpus.append(device_id)
-    
+
     return free_gpus
+
 
 size_dict = {
     "<class 'transformers.models.llama.modeling_llama.LlamaDecoderLayer'>": 3286,
     "<class 'torch.nn.modules.sparse.Embedding'>": 1000,
-    "<class 'transformers.models.llama.modeling_llama.LlamaRMSNorm'>": 2
+    "<class 'transformers.models.llama.modeling_llama.LlamaRMSNorm'>": 2,
 }
 
-class Llama2ChatHelperBase:
-    def __init__(self, token, system_prompt, model_name, master_device=None,threshold=0.25, add_only_after_end_str=True):
 
+class Llama2ChatHelperBase:
+    def __init__(
+        self,
+        token,
+        system_prompt,
+        model_name,
+        master_device=None,
+        threshold=0.25,
+        add_only_after_end_str=True,
+    ):
         self.system_prompt = system_prompt
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, use_auth_token=token, ignore_mismatched_sizes=True)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_name, use_auth_token=token, ignore_mismatched_sizes=True
+        )
         self.model = AutoModelForCausalLM.from_pretrained(
-            model_name, use_auth_token=token)
+            model_name, use_auth_token=token
+        )
         self.model.eval()  # Setting the model to evaluation mode
         self.model.requires_grad_(False)  # Turning off gradient calculation
         self.add_only_after_end_str = add_only_after_end_str
- 
-        if model_name=="meta-llama/Llama-2-70b-chat-hf":
 
+        if model_name == "meta-llama/Llama-2-70b-chat-hf":
             for i, layer in enumerate(self.model.model.layers):
                 self.model.module.model.layers[i] = BlockOutputWrapper(
-                    layer, self.model.module.lm_head, self.model.module.model.norm, self.tokenizer
+                    layer,
+                    self.model.module.lm_head,
+                    self.model.module.model.norm,
+                    self.tokenizer,
                 )
-            object_list=[self.model.model.embed_tokens, self.model.model.norm] +[self.model.model.layers[i] for i in range(len(self.model.model.layers))]
-            gpu_ids=chat_helper.get_free_gpus(threshold=threshold)
-            current_gpu_idx=0
+            object_list = [self.model.model.embed_tokens, self.model.model.norm] + [
+                self.model.model.layers[i] for i in range(len(self.model.model.layers))
+            ]
+            gpu_ids = chat_helper.get_free_gpus(threshold=threshold)
+            current_gpu_idx = 0
             for object in tqdm(object_list):
-                while get_free_memory_on_gpus()[gpu_ids[current_gpu_idx]]<size_dict[str(type(object))]:
-                    current_gpu_idx+=1
-                    if current_gpu_idx>=len(gpu_ids):
+                while (
+                    get_free_memory_on_gpus()[gpu_ids[current_gpu_idx]]
+                    < size_dict[str(type(object))]
+                ):
+                    current_gpu_idx += 1
+                    if current_gpu_idx >= len(gpu_ids):
                         raise ValueError("Not enough memory on GPUs")
                 object.to(gpu_ids[current_gpu_idx])
-                object.device=gpu_ids[current_gpu_idx]
-            def custem_forward(model,inputs):
-                
-                hidden_states = model.model.embed_tokens(inputs.to(model.model.embed_tokens.device))
+                object.device = gpu_ids[current_gpu_idx]
+
+            def custem_forward(model, inputs):
+                hidden_states = model.model.embed_tokens(
+                    inputs.to(model.model.embed_tokens.device)
+                )
                 for i, layer in enumerate(model.model.layers):
-                    hidden_states = layer(hidden_states.to(model.model.layers[i].device))[0]
-                hidden_states = model.model.norm(hidden_states.to(model.model.norm.device))
+                    hidden_states = layer(
+                        hidden_states.to(model.model.layers[i].device)
+                    )[0]
+                hidden_states = model.model.norm(
+                    hidden_states.to(model.model.norm.device)
+                )
                 return hidden_states
-            self.model.forward=custem_forward
+
+            self.model.forward = custem_forward
         else:
-
-
             # Use Data Parallelism if more han one GPU is available
 
-            if master_device!=None:
+            if master_device != None:
                 self.model = self.model.to(f"cuda:{master_device}")
             free_device_ids = get_free_gpus(threshold)
 
@@ -264,14 +305,20 @@ class Llama2ChatHelperBase:
                 self.model = DataParallel(self.model, device_ids=free_device_ids)
             for i, layer in enumerate(self.model.module.model.layers):
                 self.model.module.model.layers[i] = BlockOutputWrapper(
-                    layer, self.model.module.lm_head, self.model.module.model.norm, self.tokenizer
+                    layer,
+                    self.model.module.lm_head,
+                    self.model.module.model.norm,
+                    self.tokenizer,
                 )
             self.device = next(self.model.module.parameters()).device
-        self.END_STR = torch.tensor(self.tokenizer.encode("[/INST]")[1:]).to(self.device)
+        self.END_STR = torch.tensor(self.tokenizer.encode("[/INST]")[1:]).to(
+            self.device
+        )
 
     def set_save_internal_decodings(self, value):
         for layer in self.model.module.model.layers:
             layer.save_internal_decodings = value
+
     def set_after_positions(self, pos: int):
         for layer in self.model.module.model.layers:
             layer.after_position = pos
@@ -280,7 +327,9 @@ class Llama2ChatHelperBase:
         for layer in self.model.module.model.layers:
             layer.only_add_to_first_token = value
 
-    def prompt_to_tokens(self, instruction,system_prompt=system_prompt, model_output=""):
+    def prompt_to_tokens(
+        self, instruction, system_prompt=system_prompt, model_output=""
+    ):
         B_INST, E_INST = "[INST]", "[/INST]"
         B_SYS, E_SYS = "<<SYS>>\n", "\n<</SYS>>\n\n"
         dialog_content = B_SYS + system_prompt + E_SYS + instruction.strip()
@@ -308,9 +357,7 @@ class Llama2ChatHelperBase:
 
     def generate_text(self, prompt, max_length=50):
         tokens = self.prompt_to_tokens(prompt)
-        return self.generate(tokens, max_new_tokens = max_length)
-
-
+        return self.generate(tokens, max_new_tokens=max_length)
 
     def generate(self, tokens, max_new_tokens=50):
         with torch.no_grad():
@@ -320,7 +367,7 @@ class Llama2ChatHelperBase:
             else:
                 instr_pos = None
             self.set_after_positions(instr_pos)
-            
+
             generated = self.model.module.generate(
                 inputs=tokens, max_new_tokens=max_new_tokens, top_k=1
             )
@@ -484,23 +531,47 @@ class Llama2ChatHelperBase:
 
 
 class Llama13BChatHelper(Llama2ChatHelperBase):
-    def __init__(self, token, system_prompt, master_device=None):
-        super().__init__(token, system_prompt, "meta-llama/Llama-2-13b-chat-hf", master_device=master_device)
+    def __init__(self, token, system_prompt, master_device=None, threshold=0.25):
+        super().__init__(
+            token,
+            system_prompt,
+            "meta-llama/Llama-2-13b-chat-hf",
+            master_device=master_device,
+            threshold=threshold,
+        )
 
 
 class Llama30BChatHelper(Llama2ChatHelperBase):
-    def __init__(self, token, system_prompt,master_device=None):
-        super().__init__(token, system_prompt, "meta-llama/Llama-2-30b-chat-hf",  master_device=master_device)
+    def __init__(self, token, system_prompt, master_device=None, threshold=0.25):
+        super().__init__(
+            token,
+            system_prompt,
+            "meta-llama/Llama-2-30b-chat-hf",
+            master_device=master_device,
+            threshold=threshold,
+        )
 
 
 class Llama70BChatHelper(Llama2ChatHelperBase):
-    def __init__(self, token, system_prompt,master_device=None,threshold=0.25):
-        super().__init__(token, system_prompt, "meta-llama/Llama-2-70b-chat-hf",  master_device=master_device, threshold=threshold)
+    def __init__(self, token, system_prompt, master_device=None, threshold=0.25):
+        super().__init__(
+            token,
+            system_prompt,
+            "meta-llama/Llama-2-70b-chat-hf",
+            master_device=master_device,
+            threshold=threshold,
+        )
 
 
 class Llama7BChatHelper(Llama2ChatHelperBase):
-    def __init__(self, token, system_prompt, master_device=None,threshold=0.25):
-        super().__init__(token, system_prompt, "meta-llama/Llama-2-7b-chat-hf",master_device=master_device, threshold=threshold)
+    def __init__(self, token, system_prompt, master_device=None, threshold=0.25):
+        super().__init__(
+            token,
+            system_prompt,
+            "meta-llama/Llama-2-7b-chat-hf",
+            master_device=master_device,
+            threshold=threshold,
+        )
 
 
 def prompt_to_tokens(tokenizer, system_prompt, instruction, model_output):

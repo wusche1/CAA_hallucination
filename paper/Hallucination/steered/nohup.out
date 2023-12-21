@@ -1,0 +1,92 @@
+
+Loading model...
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:04<00:04,  4.04s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:04<00:00,  1.91s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:04<00:00,  2.23s/it]
+Traceback (most recent call last):
+  File "/root/CAA_hallucination/paper/Hallucination/steered/steered_completions_script.py", line 29, in <module>
+    model = chat_helper.Llama7BChatHelper(
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 507, in __init__
+    super().__init__(token, system_prompt, "meta-llama/Llama-2-7b-chat-hf",master_device=master_device, threshold=threshold)
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 254, in __init__
+    self.model = self.model.to(f"cuda:{master_device}")
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/transformers/modeling_utils.py", line 1902, in to
+    return super().to(*args, **kwargs)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1145, in to
+    return self._apply(convert)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 797, in _apply
+    module._apply(fn)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 797, in _apply
+    module._apply(fn)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 820, in _apply
+    param_applied = fn(param)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1143, in convert
+    return t.to(device, dtype if t.is_floating_point() or t.is_complex() else None, non_blocking)
+RuntimeError: CUDA error: invalid device ordinal
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+Loading model...
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.26s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.28it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.17it/s]
+Using 2 GPUs!
+257
+skipping fiction steered completions for direct_questions with coeff -10
+skipping mix steered completions for direct_questions with coeff -10
+generating truth steered completions for direct_questions with coeff -10
+skipping fiction steered completions for direct_questions with coeff -7.5
+skipping mix steered completions for direct_questions with coeff -7.5
+generating truth steered completions for direct_questions with coeff -7.5
+skipping fiction steered completions for direct_questions with coeff -5
+skipping mix steered completions for direct_questions with coeff -5
+generating truth steered completions for direct_questions with coeff -5
+skipping fiction steered completions for direct_questions with coeff -2.5
+skipping mix steered completions for direct_questions with coeff -2.5
+generating truth steered completions for direct_questions with coeff -2.5
+skipping fiction steered completions for direct_questions with coeff 0
+skipping mix steered completions for direct_questions with coeff 0
+generating truth steered completions for direct_questions with coeff 0
+Traceback (most recent call last):
+  File "/root/CAA_hallucination/paper/Hallucination/steered/steered_completions_script.py", line 264, in <module>
+    truth_steered_completions = generate_answers(questions_comparison, model)
+  File "/root/CAA_hallucination/paper/Hallucination/steered/steered_completions_script.py", line 76, in generate_answers
+    a_list = model.generate_text_batched(
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 346, in generate_text_batched
+    second_half = self.generate_text_batched(
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 346, in generate_text_batched
+    second_half = self.generate_text_batched(
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 343, in generate_text_batched
+    first_half = self.generate_text_batched(
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 343, in generate_text_batched
+    first_half = self.generate_text_batched(
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 371, in generate_text_batched
+    generated = self.model.module.generate(
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 1572, in generate
+    return self.sample(
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/transformers/generation/utils.py", line 2619, in sample
+    outputs = self(
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/transformers/models/llama/modeling_llama.py", line 688, in forward
+    outputs = self.model(
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/transformers/models/llama/modeling_llama.py", line 578, in forward
+    layer_outputs = decoder_layer(
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 78, in forward
+    output = self.block(*args, **kwargs)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/transformers/models/llama/modeling_llama.py", line 292, in forward
+    hidden_states, self_attn_weights, present_key_value = self.self_attn(
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 42, in forward
+    output = self.attn(*args, **kwargs)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/transformers/models/llama/modeling_llama.py", line 227, in forward
+    attn_weights, torch.tensor(torch.finfo(attn_weights.dtype).min, device=attn_weights.device)
+KeyboardInterrupt

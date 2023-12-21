@@ -11,8 +11,9 @@ import pandas as pd
 from tqdm import tqdm
 import torch
 import json
+
 keys_file_path = "/root/keys"
-with open(keys_file_path, 'r') as keys_file:
+with open(keys_file_path, "r") as keys_file:
     keys = json.load(keys_file)
 
 token = keys["TOKEN_NAME"]
@@ -26,7 +27,7 @@ system_prompt = (
 )
 print("Loading model...")
 model = chat_helper.Llama7BChatHelper(
-    token, system_prompt, master_device=1, threshold=0.1
+    token, system_prompt, master_device=0, threshold=0.1
 )
 model.tokenizer.pad_token = model.tokenizer.eos_token
 
@@ -210,6 +211,17 @@ for question_type in question_types:
     steering_vector_mix = average_random_lines(steering_data_mix)
     steering_vector_mix = steering_vector_mix / np.linalg.norm(steering_vector_mix)
 
+    steering_data_truth = torch.load(
+        f"{question_path}{question_type}/truth/all_diffs_layer_{layer}.pt"
+    )
+
+    steering_vector_truth = average_random_lines(steering_data_truth)
+    steering_vector_truth = steering_vector_truth / np.linalg.norm(
+        steering_vector_truth
+    )
+
+    steering_vector_added = steering_vector_fiction + steering_vector_truth
+
     # steering_data_truth = torch.load(f'{question_path}{question_type}/truth/all_diffs_layer_{layer}.pt')
     # steering_vector_truth = average_random_lines(steering_data_truth)
     # steering_vector_combined = (steering_vector_fiction + steering_vector_truth)/2
@@ -242,4 +254,14 @@ for question_type in question_types:
         else:
             print(
                 f"skipping mix steered completions for {question_type} with coeff {coeff}"
+            )
+        if not os.path.exists(f"{path}added_steered_{coeff}.csv"):
+            print(
+                f"generating truth steered completions for {question_type} with coeff {coeff}"
+            )
+            model.reset_all()
+            model.set_add_activations(layer, steering_vector_added * coeff)
+            truth_steered_completions = generate_answers(questions_comparison, model)
+            truth_steered_completions.to_csv(
+                f"{path}added_steered_{coeff}.csv", index=False
             )

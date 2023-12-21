@@ -1,0 +1,11 @@
+flan-t5-small
+flan-*
+.env
+__pycache__
+.vscode
+venv
+.ipynb_checkpoints
+*_ignore_*
+new_venv
+*all_diffs*
+*myenv*
