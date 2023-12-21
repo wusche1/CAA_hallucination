@@ -90,3 +90,140 @@ Traceback (most recent call last):
   File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/transformers/models/llama/modeling_llama.py", line 227, in forward
     attn_weights, torch.tensor(torch.finfo(attn_weights.dtype).min, device=attn_weights.device)
 KeyboardInterrupt
+Loading model...
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.24s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.31it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.20it/s]
+Traceback (most recent call last):
+  File "/root/CAA_hallucination/paper/Hallucination/steered/steered_completions_script.py", line 29, in <module>
+    model = chat_helper.Llama7BChatHelper(
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 568, in __init__
+    super().__init__(
+  File "/root/CAA_hallucination/paper/Hallucination/steered/../../lib/chat_helper.py", line 291, in __init__
+    self.model = self.model.to(f"cuda:{master_device}")
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/transformers/modeling_utils.py", line 1902, in to
+    return super().to(*args, **kwargs)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1145, in to
+    return self._apply(convert)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 797, in _apply
+    module._apply(fn)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 797, in _apply
+    module._apply(fn)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 820, in _apply
+    param_applied = fn(param)
+  File "/root/miniconda/envs/my_env/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1143, in convert
+    return t.to(device, dtype if t.is_floating_point() or t.is_complex() else None, non_blocking)
+RuntimeError: CUDA error: out of memory
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1.
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+Loading model...
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.13s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.40it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.29it/s]
+Using 2 GPUs!
+257
+skipping fiction steered completions for direct_questions with coeff -10
+skipping mix steered completions for direct_questions with coeff -10
+skipping fiction steered completions for direct_questions with coeff -7.5
+skipping mix steered completions for direct_questions with coeff -7.5
+skipping fiction steered completions for direct_questions with coeff -5
+skipping mix steered completions for direct_questions with coeff -5
+skipping fiction steered completions for direct_questions with coeff -2.5
+skipping mix steered completions for direct_questions with coeff -2.5
+skipping fiction steered completions for direct_questions with coeff 0
+skipping mix steered completions for direct_questions with coeff 0
+generating truth steered completions for direct_questions with coeff 0
+skipping fiction steered completions for direct_questions with coeff 2.5
+skipping mix steered completions for direct_questions with coeff 2.5
+generating truth steered completions for direct_questions with coeff 2.5
+skipping fiction steered completions for direct_questions with coeff 5
+skipping mix steered completions for direct_questions with coeff 5
+generating truth steered completions for direct_questions with coeff 5
+skipping fiction steered completions for direct_questions with coeff 7.5
+skipping mix steered completions for direct_questions with coeff 7.5
+generating truth steered completions for direct_questions with coeff 7.5
+skipping fiction steered completions for direct_questions with coeff 10
+skipping mix steered completions for direct_questions with coeff 10
+generating truth steered completions for direct_questions with coeff 10
+257
+skipping fiction steered completions for questioning_assuming_statement with coeff -10
+skipping mix steered completions for questioning_assuming_statement with coeff -10
+generating truth steered completions for questioning_assuming_statement with coeff -10
+skipping fiction steered completions for questioning_assuming_statement with coeff -7.5
+skipping mix steered completions for questioning_assuming_statement with coeff -7.5
+generating truth steered completions for questioning_assuming_statement with coeff -7.5
+skipping fiction steered completions for questioning_assuming_statement with coeff -5
+skipping mix steered completions for questioning_assuming_statement with coeff -5
+generating truth steered completions for questioning_assuming_statement with coeff -5
+skipping fiction steered completions for questioning_assuming_statement with coeff -2.5
+skipping mix steered completions for questioning_assuming_statement with coeff -2.5
+generating truth steered completions for questioning_assuming_statement with coeff -2.5
+skipping fiction steered completions for questioning_assuming_statement with coeff 0
+skipping mix steered completions for questioning_assuming_statement with coeff 0
+generating truth steered completions for questioning_assuming_statement with coeff 0
+skipping fiction steered completions for questioning_assuming_statement with coeff 2.5
+skipping mix steered completions for questioning_assuming_statement with coeff 2.5
+generating truth steered completions for questioning_assuming_statement with coeff 2.5
+skipping fiction steered completions for questioning_assuming_statement with coeff 5
+skipping mix steered completions for questioning_assuming_statement with coeff 5
+generating truth steered completions for questioning_assuming_statement with coeff 5
+skipping fiction steered completions for questioning_assuming_statement with coeff 7.5
+skipping mix steered completions for questioning_assuming_statement with coeff 7.5
+generating truth steered completions for questioning_assuming_statement with coeff 7.5
+skipping fiction steered completions for questioning_assuming_statement with coeff 10
+skipping mix steered completions for questioning_assuming_statement with coeff 10
+generating truth steered completions for questioning_assuming_statement with coeff 10
+257
+skipping fiction steered completions for conversation with coeff -10
+skipping mix steered completions for conversation with coeff -10
+generating truth steered completions for conversation with coeff -10
+skipping fiction steered completions for conversation with coeff -7.5
+skipping mix steered completions for conversation with coeff -7.5
+generating truth steered completions for conversation with coeff -7.5
+skipping fiction steered completions for conversation with coeff -5
+skipping mix steered completions for conversation with coeff -5
+generating truth steered completions for conversation with coeff -5
+skipping fiction steered completions for conversation with coeff -2.5
+skipping mix steered completions for conversation with coeff -2.5
+generating truth steered completions for conversation with coeff -2.5
+skipping fiction steered completions for conversation with coeff 0
+skipping mix steered completions for conversation with coeff 0
+generating truth steered completions for conversation with coeff 0
+skipping fiction steered completions for conversation with coeff 2.5
+skipping mix steered completions for conversation with coeff 2.5
+generating truth steered completions for conversation with coeff 2.5
+skipping fiction steered completions for conversation with coeff 5
+skipping mix steered completions for conversation with coeff 5
+generating truth steered completions for conversation with coeff 5
+skipping fiction steered completions for conversation with coeff 7.5
+skipping mix steered completions for conversation with coeff 7.5
+generating truth steered completions for conversation with coeff 7.5
+skipping fiction steered completions for conversation with coeff 10
+skipping mix steered completions for conversation with coeff 10
+generating truth steered completions for conversation with coeff 10
+257
+skipping fiction steered completions for alluding_questions with coeff -10
+skipping mix steered completions for alluding_questions with coeff -10
+generating truth steered completions for alluding_questions with coeff -10
+skipping fiction steered completions for alluding_questions with coeff -7.5
+skipping mix steered completions for alluding_questions with coeff -7.5
+generating truth steered completions for alluding_questions with coeff -7.5
+skipping fiction steered completions for alluding_questions with coeff -5
+skipping mix steered completions for alluding_questions with coeff -5
+generating truth steered completions for alluding_questions with coeff -5
+skipping fiction steered completions for alluding_questions with coeff -2.5
+skipping mix steered completions for alluding_questions with coeff -2.5
+generating truth steered completions for alluding_questions with coeff -2.5
+skipping fiction steered completions for alluding_questions with coeff 0
+skipping mix steered completions for alluding_questions with coeff 0
+generating truth steered completions for alluding_questions with coeff 0
+skipping fiction steered completions for alluding_questions with coeff 2.5
+skipping mix steered completions for alluding_questions with coeff 2.5
+generating truth steered completions for alluding_questions with coeff 2.5
+skipping fiction steered completions for alluding_questions with coeff 5
+skipping mix steered completions for alluding_questions with coeff 5
+generating truth steered completions for alluding_questions with coeff 5
+skipping fiction steered completions for alluding_questions with coeff 7.5
+skipping mix steered completions for alluding_questions with coeff 7.5
+generating truth steered completions for alluding_questions with coeff 7.5
+skipping fiction steered completions for alluding_questions with coeff 10
+skipping mix steered completions for alluding_questions with coeff 10
+generating truth steered completions for alluding_questions with coeff 10
