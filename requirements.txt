@@ -152,3 +152,4 @@ anthropic == 0.3.11
 openpyxl ==3.1.2
 ipywidgets == 8.1.1
 tiktoken ==  0.5.1
+statsmodels == 0.14.1
