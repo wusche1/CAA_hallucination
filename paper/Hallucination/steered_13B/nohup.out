@@ -1,2 +1,43 @@
 Loading model...
 Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:08<00:17,  8.59s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:13<00:06,  6.20s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:15<00:00,  4.55s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:15<00:00,  5.23s/it]
+Using 2 GPUs!
+257
+generating fiction steered completions for direct_questions with coeff -10
+generating fiction steered completions for direct_questions with coeff -7.5
+generating fiction steered completions for direct_questions with coeff -5
+generating fiction steered completions for direct_questions with coeff -2.5
+generating fiction steered completions for direct_questions with coeff 0
+generating fiction steered completions for direct_questions with coeff 2.5
+generating fiction steered completions for direct_questions with coeff 5
+generating fiction steered completions for direct_questions with coeff 7.5
+generating fiction steered completions for direct_questions with coeff 10
+257
+generating fiction steered completions for questioning_assuming_statement with coeff -10
+generating fiction steered completions for questioning_assuming_statement with coeff -7.5
+generating fiction steered completions for questioning_assuming_statement with coeff -5
+generating fiction steered completions for questioning_assuming_statement with coeff -2.5
+generating fiction steered completions for questioning_assuming_statement with coeff 0
+generating fiction steered completions for questioning_assuming_statement with coeff 2.5
+generating fiction steered completions for questioning_assuming_statement with coeff 5
+generating fiction steered completions for questioning_assuming_statement with coeff 7.5
+generating fiction steered completions for questioning_assuming_statement with coeff 10
+257
+generating fiction steered completions for conversation with coeff -10
+generating fiction steered completions for conversation with coeff -7.5
+generating fiction steered completions for conversation with coeff -5
+generating fiction steered completions for conversation with coeff -2.5
+generating fiction steered completions for conversation with coeff 0
+generating fiction steered completions for conversation with coeff 2.5
+generating fiction steered completions for conversation with coeff 5
+generating fiction steered completions for conversation with coeff 7.5
+generating fiction steered completions for conversation with coeff 10
+257
+generating fiction steered completions for alluding_questions with coeff -10
+generating fiction steered completions for alluding_questions with coeff -7.5
+generating fiction steered completions for alluding_questions with coeff -5
+generating fiction steered completions for alluding_questions with coeff -2.5
+generating fiction steered completions for alluding_questions with coeff 0
+generating fiction steered completions for alluding_questions with coeff 2.5
+generating fiction steered completions for alluding_questions with coeff 5
+generating fiction steered completions for alluding_questions with coeff 7.5
+generating fiction steered completions for alluding_questions with coeff 10
